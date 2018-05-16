@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Mapbox GL</title>
+
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #sidebar {
+            width: 25%;
+            
+        }
+
+        #sidebar-content {
+            text-align: center;
+            width: 80%;
+            margin: 10px auto 10px auto;
+        }
+
+        #map {
+            border-left: 1px solid #000;
+            position: absolute;
+            left: 25%;
+            width: 75%;
+            top: 0;
+            bottom: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="sidebar">
+        <div id="sidebar-content">
+            <h2>Urban Honolulu</h2>
+            <p>Data from
+                <a href="http://honolulu-cchnl.opendata.arcgis.com/datasets/aa444ba7c76e475f8dc54e0fa0913b34_0" target="_blank">Honolulu Open Geospatial Data</a>
+            </p>
+            <p>Captured from LIDAR in 2004, 2005, and 2009.</p>
+            <p>The taller the building, the more red.</p>
+        </div>
+    </div>
+    <div id="map"></div>
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.js'></script>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+
+    <script>
+        mapboxgl.accessToken =
+            'pk.eyJ1Ijoic2ViYXN0aWFuLWNoIiwiYSI6ImNpejkxdzZ5YzAxa2gyd21udGpmaGU0dTgifQ.IrEd_tvrl6MuypVNUGU5SQ';
+
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v9',
+            center: [-157.831, 21.287], // starting position [lng, lat]
+            zoom: 14.1,
+            maxzoom: 12,
+            minzoom: 2,
+            pitch: 60,
+            bearing: 22.6
+        });
+
+        map.addControl(new mapboxgl.NavigationControl());
+
+        map.on('load', function () {
+
+            d3.json('geojsons/hono.geojson', function (geojson) {
+
+                // d3.json('https://cdn.rawgit.com/sebastian-ch/8196e2d1f03649d3a2ec1bb0eeb78a79/raw/e8273e3e3d567df1d34382e0fe12f2ab597e51f0/honomarch-s.geojson', function (geojson) {
+
+                addLayer(geojson);
+            })
+        });
+
+        function addLayer(geojson) {
+
+            var layer1 = map.addLayer({
+
+                'id': '3d-oahu',
+                'type': 'fill-extrusion',
+                'source': {
+                    'type': 'geojson',
+                    'data': geojson
+                },
+
+                'paint': {
+                    'fill-extrusion-color': {
+                        property: 'h',
+                        stops: [
+                            [25.58, '#ffffff'],
+                            [51.61, '#ffbfbf'],
+                            [115.39, '#ff8080'],
+                            [255.22, '#ff4040'],
+                            [503.58, '#ff0000']
+                        ]
+                    },
+                    'fill-extrusion-height':
+
+                    {
+
+                        'property': 'h',
+                        'type': 'identity'
+                    },
+                    'fill-extrusion-base': [
+                        "interpolate", ["linear"],
+                        ["zoom"],
+                        15, 0,
+                        15.05, ["get", "0"]
+                    ],
+                    'fill-extrusion-opacity': 0.7
+                },
+                'tolerance': 0.4
+
+            });
+
+            function getColor() {
+                return '#aaa';
+            }
+        }
+    </script>
+</body>
+
+</html>
