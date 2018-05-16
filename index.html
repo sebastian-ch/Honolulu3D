@@ -16,7 +16,7 @@
 
         #sidebar {
             width: 25%;
-            
+
         }
 
         #sidebar-content {
@@ -73,12 +73,20 @@
 
         map.addControl(new mapboxgl.NavigationControl());
 
+        var allLayers, labelLayers;
+
         map.on('load', function () {
 
+            allLayers = map.getStyle().layers;
+
+            for (var i = 0; i < allLayers.length; i++) {
+                if (allLayers[i].type === 'symbol' && allLayers[i].layout['text-field']) {
+                    labelLayers = allLayers[i].id;
+                    break;
+                }
+            }
+
             d3.json('geojsons/hono.geojson', function (geojson) {
-
-                // d3.json('https://cdn.rawgit.com/sebastian-ch/8196e2d1f03649d3a2ec1bb0eeb78a79/raw/e8273e3e3d567df1d34382e0fe12f2ab597e51f0/honomarch-s.geojson', function (geojson) {
-
                 addLayer(geojson);
             })
         });
@@ -122,11 +130,7 @@
                 },
                 'tolerance': 0.4
 
-            });
-
-            function getColor() {
-                return '#aaa';
-            }
+            }, labelLayers);
         }
     </script>
 </body>
