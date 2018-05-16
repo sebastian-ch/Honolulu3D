@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Mapbox GL</title>
+    <title>Honolulu 3D</title>
 
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.css' rel='stylesheet' />
     <style>
@@ -12,17 +12,18 @@
             font-family: sans-serif;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+
         }
 
         #sidebar {
             width: 25%;
-
         }
 
         #sidebar-content {
             text-align: center;
             width: 80%;
-            margin: 10px auto 10px auto;
+            margin: 5px auto 5px auto;
         }
 
         #map {
@@ -40,13 +41,15 @@
 <body>
 
     <div id="sidebar">
-        <div id="sidebar-content">
+     <div id="sidebar-content">
             <h2>Urban Honolulu</h2>
             <p>Data from
                 <a href="http://honolulu-cchnl.opendata.arcgis.com/datasets/aa444ba7c76e475f8dc54e0fa0913b34_0" target="_blank">Honolulu Open Geospatial Data</a>
             </p>
             <p>Captured from LIDAR in 2004, 2005, and 2009.</p>
             <p>The taller the building, the more red.</p>
+
+            <a href="https://github.com/sebastian-ch/Honolulu3D" target="_blank">Github</a>
         </div>
     </div>
     <div id="map"></div>
